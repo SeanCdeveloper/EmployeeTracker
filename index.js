@@ -75,7 +75,6 @@ function viewEmployees(answer) {
 
     connection.query("SELECT * FROM EmployeeTrackerDB.employee", function (err, res) {
         if (err) throw err;
-        console.log(res);
         for (let i = 0; i < res.length; i++) {
             console.log(
                 " First Name: " +
@@ -103,13 +102,58 @@ function viewRoles() {
 }
 
 function addDepartments() {
-    console.log("Add Departments");
+    //console.log("Add Departments");    
     runSearch();
 }
 
 function addEmployee() {
-    console.log("Add Employee");
+    // // console.log("Add Employee");
+    inquirer
+        .prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "What is the employee's first name?",
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "What is the employee's last name?",
+            },
+            {
+                name: "role_id",
+                type: "input",
+                message: "What is the employee's role id?",
+            },
+            {
+                name: "manager_id",
+                type: "input",
+                message: "What is the employee's manager id?",
+            }
+        ]).then(function (answer) {
+    createProduct();
+    function createProduct() {
+        console.log("Inserting a new product...\n");
+        var query = connection.query(
+            "INSERT INTO employee SET ?",
+            {
+                first_name: answer.firstName,
+                last_name: answer.lastName,
+                role_id: answer.role_id,
+                manager_id: answer.manager_id
+            },
+            function (err, res) {
+                if (err) throw err;
+                console.log(res.affectedRows + " name inserted!\n");
+                // Call updateProduct AFTER the INSERT completes
+                //updateProduct();
+            }
+        );
+        // logs the actual query being run
+        console.log(query.sql);
+    }
     runSearch();
+});
 }
 
 function addRoles() {
