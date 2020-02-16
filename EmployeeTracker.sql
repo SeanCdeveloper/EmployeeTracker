@@ -30,8 +30,29 @@ CREATE TABLE employees (
     FOREIGN KEY(role_id) REFERENCES role(id)
 );
 
+/*! Seeded Files
+INSERT INTO employee(first_name, last_name, role_id, manager_id)
+VALUES ("MADE", "UP", 1,2);
 
- 
+INSERT INTO employee(first_name, last_name, role_id, manager_id)
+VALUES ("Captain", "Anonymous", 3, 4);
+
+INSERT INTO employee(first_name, last_name, role_id, manager_id)
+VALUES ("ChillinB", "Chill", 5, 6);
+
+INSERT INTO department (name) 
+VALUES ("Sales"), ("Legal"), ("Finance"), ("Engineering");
+
+INSERT INTO role (title, salary, department_id)
+VALUES ('Sales Lead', 100000, 1), 
+       ('Salesperson', 60000, 1),    
+	   ('Lawyer', 190000, 2),
+	   ('Legal Team Lead', 250000, 2),
+	   ('Accountant', 125000, 3),
+	   ('Software Engineer', 120000, 4),
+	   ('Lead Software Engineer', 180000, 4);
+*/
+
 
 
 

@@ -71,7 +71,7 @@ function runSearch() {
 }
 
 function viewEmployees(answer) {
-    console.log("View all Employees");
+    //console.log("View all Employees");
 
     connection.query("SELECT * FROM EmployeeTrackerDB.employee", function (err, res) {
         if (err) throw err;
@@ -93,6 +93,17 @@ function viewEmployees(answer) {
 
 function viewDepartments() {
     console.log("View all Departments");
+    connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
+        if (err) throw err;
+        for (let i = 0; i < res.length; i++) {
+            console.log(
+                " id: " +
+                res[i].id +
+                " || Department: " +
+                res[i].name 
+            );
+        }
+    });
     runSearch();
 }
 
@@ -123,12 +134,12 @@ function addEmployee() {
             {
                 name: "role_id",
                 type: "input",
-                message: "What is the employee's role id?",
+                message: "What is the employee's role?",
             },
             {
                 name: "manager_id",
                 type: "input",
-                message: "What is the employee's manager id?",
+                message: "Who is the employee's manager?",
             }
         ]).then(function (answer) {
     createProduct();
