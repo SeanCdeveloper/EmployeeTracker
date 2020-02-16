@@ -24,13 +24,13 @@ function runSearch() {
             choices: [
                 "View all Employees",
                 "View all Departments",
+                "View all Roles",
                 /* (Bonus)   "View all Employees By Department",*/
                 /* (Bonus)  "View all Employees By Manager",*/
-                "View all Roles",
                 "Add Employee",
+                /* (Bonus)   "Remove Employee",*/
                 "Add Departments",
                 /* (Bonus)  "Delete Departments",*/
-                /* (Bonus)   "Delete Employee",*/
                 "Add Roles",
                 "Update Employee Role",
                 /* (Bonus)   "Remove Roles",*/
@@ -92,7 +92,6 @@ function viewEmployees(answer) {
 }
 
 function viewDepartments() {
-    console.log("View all Departments");
     connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
         if (err) throw err;
         for (let i = 0; i < res.length; i++) {
@@ -109,11 +108,19 @@ function viewDepartments() {
 
 function viewRoles() {
     console.log("View all Roles");
-    runSearch();
-}
-
-function addDepartments() {
-    //console.log("Add Departments");    
+    connection.query("SELECT * FROM EmployeeTrackerDB.role", function (err, res) {
+        if (err) throw err;
+        for (let i = 0; i < res.length; i++) {
+            console.log(
+                " Id: " +
+                res[i].id +
+                " || Title: " +
+                res[i].title + 
+                " || Salary: " + res[i].salary +
+                "|| Department Id: " + res[i].department_id
+            );
+        }
+    });
     runSearch();
 }
 
@@ -165,6 +172,11 @@ function addEmployee() {
     }
     runSearch();
 });
+}
+
+function addDepartments() {
+    //console.log("Add Departments");    
+    runSearch();
 }
 
 function addRoles() {
