@@ -151,7 +151,7 @@ function addEmployee() {
         ]).then(function (answer) {
     createProduct();
     function createProduct() {
-        console.log("Inserting a new product...\n");
+        console.log("Inserting a new Employee...\n");
         var query = connection.query(
             "INSERT INTO employee SET ?",
             {
@@ -175,8 +175,35 @@ function addEmployee() {
 }
 
 function addDepartments() {
-    //console.log("Add Departments");    
+    //console.log("Add Departments"); 
+    inquirer
+    .prompt([
+    {
+        name: "addDepartment",
+        type: "input",
+        message: "What Department do you want to add?",
+    }
+]).then(function (answer) {
+createProduct();
+function createProduct() {
+console.log("Inserting a new Department...\n");
+var query = connection.query(
+    "INSERT INTO department SET ?",
+    {
+        name: answer.addDepartment,
+    },
+    function (err, res) {
+        if (err) throw err;
+        console.log(res.affectedRows + " name inserted!\n");
+        // Call updateProduct AFTER the INSERT completes
+        //updateProduct();
+    }
+);
+// logs the actual query being run
+console.log(query.sql);
+}
     runSearch();
+});
 }
 
 function addRoles() {
