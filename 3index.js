@@ -213,6 +213,14 @@ console.log(query.sql);
 async function addRoles() {
     connection.query('SELECT name FROM department', function(err, results) {
         if (err) throw err;
+        var dNames = [];
+        for (let i=0; i<results.length; i++) {
+            dNames.push(results[i].name);
+        }
+        //return dNames;
+        console.log(dNames);
+    });
+    //console.log(results[i].name);
     const role = inquirer.prompt([
     {
         name: "addRole",
@@ -228,13 +236,7 @@ async function addRoles() {
         name: "addRole",
         type: "list",
         message: "To what department do you want to add this role?",
-        choices: function() {
-        let dNames = [];
-        for (let i=0; i<results.length; i++) {
-        dNames.push(results[i].name);
-        }
-        return dNames;
-    }
+        choices: dNames
     }
 ]).then(function (answer) {
 createProduct();
@@ -257,11 +259,8 @@ var query = connection.query(
 console.log(query.sql);
 }
     runSearch();
-/*used to be above "inquirer.prompt*/});
 });
 }
-
-
 
 function updateRole() {
     console.log("Update Employee Role");

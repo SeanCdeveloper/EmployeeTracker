@@ -1,8 +1,5 @@
-const mysql = require("mysql");
-const inquirer = require("inquirer");
-// const { getAllDepartmentNames } = require('./department');
-// const { getDepartmentID } = require('./dataStore');
-// const { getAllRoles } = require('../dataStore');
+var mysql = require("mysql");
+var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -122,7 +119,6 @@ function viewRoles() {
                 " || Salary: " + res[i].salary +
                 "|| Department Id: " + res[i].department_id
             );
-
         }
     });
     runSearch();
@@ -211,9 +207,7 @@ console.log(query.sql);
 }
 
 async function addRoles() {
-    connection.query('SELECT name FROM department', function(err, results) {
-        if (err) throw err;
-    const role = inquirer.prompt([
+    inquirer.prompt([
     {
         name: "addRole",
         type: "input",
@@ -226,17 +220,12 @@ async function addRoles() {
     },
     {
         name: "addRole",
-        type: "list",
+        type: "input",
         message: "To what department do you want to add this role?",
-        choices: function() {
-        let dNames = [];
-        for (let i=0; i<results.length; i++) {
-        dNames.push(results[i].name);
-        }
-        return dNames;
-    }
+        choices: []
     }
 ]).then(function (answer) {
+
 createProduct();
 function createProduct() {
 console.log("Inserting a new Department...\n");
@@ -257,11 +246,8 @@ var query = connection.query(
 console.log(query.sql);
 }
     runSearch();
-/*used to be above "inquirer.prompt*/});
 });
 }
-
-
 
 function updateRole() {
     console.log("Update Employee Role");
