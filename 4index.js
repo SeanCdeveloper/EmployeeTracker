@@ -16,25 +16,7 @@ connection.connect(function (err) {
     runSearch();
 });
 
-/* Database Calls: Begin */
-
-getManagerNames();
-let managerNames = [];
-async function getManagerNames() {
-    connection.query("SELECT * FROM employee WHERE manager_id IS NULL", function (err, res) {
-        if (err) throw err;
-       // console.log(res);
-        for (let i =0; i<res.length; i++) {
-           // console.log(res[i].first_name + " " + res[i].last_name);
-            managerNames.push(res[i].first_name + "" + res[i].last_name);
-        }
-        //return managerNames
-       console.log(managerNames);
-        //const rows = await db.query;
-    });
-}
-
-/* Database Calls: End */
+//runSearch();
 
 function runSearch() {
     inquirer
@@ -91,8 +73,9 @@ function runSearch() {
         });
 }
 
-async function viewEmployees(answer) {
+function viewEmployees(answer) {
     //console.log("View all Employees");
+
     connection.query("SELECT * FROM EmployeeTrackerDB.employee", function (err, res) {
         if (err) throw err;
         for (let i = 0; i < res.length; i++) {
@@ -111,7 +94,7 @@ async function viewEmployees(answer) {
     runSearch();
 }
 
-async function viewDepartments() {
+function viewDepartments() {
     connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
         if (err) throw err;
         for (let i = 0; i < res.length; i++) {
@@ -126,7 +109,7 @@ async function viewDepartments() {
     runSearch();
 }
 
-async function viewRoles() {
+function viewRoles() {
     console.log("View all Roles");
     connection.query("SELECT * FROM EmployeeTrackerDB.role", function (err, res) {
         if (err) throw err;
@@ -145,7 +128,7 @@ async function viewRoles() {
     runSearch();
 }
 
-async function addEmployee() {
+function addEmployee() {
     // // console.log("Add Employee");
     inquirer
         .prompt([
@@ -178,8 +161,8 @@ async function addEmployee() {
             {
                 first_name: answer.firstName,
                 last_name: answer.lastName,
-             //   role_id: answer.role_id,
-              //  manager_id: answer.manager_id
+                role_id: answer.role_id,
+                manager_id: answer.manager_id
             },
             function (err, res) {
                 if (err) throw err;
@@ -195,7 +178,7 @@ async function addEmployee() {
 });
 }
 
-async function addDepartments() {
+function addDepartments() {
     //console.log("Add Departments"); 
     inquirer
     .prompt([
@@ -232,7 +215,7 @@ async function addRoles() {
         if (err) throw err;
     const role = inquirer.prompt([
     {
-        name: "addTitle",
+        name: "addRole",
         type: "input",
         message: "Enter the role you want to add?",
     },
@@ -260,7 +243,7 @@ console.log("Inserting a new Department...\n");
 var query = connection.query(
     "INSERT INTO role SET ?",
     {
-        title: answer.addTitle,
+        title: answer.addRole,
         salary: answer.salary,
     },
     function (err, res) {
@@ -278,7 +261,7 @@ console.log(query.sql);
 });
 }
 
-async function updateRole() {
+function updateRole() {
     console.log("Update Employee Role");
     runSearch();
 }
