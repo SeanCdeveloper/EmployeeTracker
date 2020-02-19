@@ -48,6 +48,23 @@ connection.connect(function (err) {
 
 /* Database Calls: Begin */
 
+// Getting role.title + employee.manager_id Simultaneously 
+
+// getEmpInfo2();
+// async function getEmpInfo2() {
+//     connection.query("SELECT title FROM role", function (err, roles) {
+//         if (err) throw err;
+//     connection.query("SELECT * FROM employee WHERE manager_id IS NULL", function (err, managers) {
+//             if (err) throw err;
+//            // console.log(roles, managers);
+//             const roleTitle = roles.map(role => role.title)
+//             console.log(roleTitle);
+//             const managerList = managers.map(manager => manager.first_name + manager.last_name);
+//             console.log(managerList);
+//         });
+//     });
+// }
+
 // // Getting Manager Names:
 
 // getManagerNames();
