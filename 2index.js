@@ -13,28 +13,13 @@ var connection = mysql.createConnection({
 });
 connection.connect(function (err) {
     if (err) throw err;
-    runSearch();
+   runSearch();
 });
 
 /* Database Calls: Begin */
 
 // Selecting name FROM department AND * FROM employee WHERE manager_id IS NULL
 // SELECT * FROM employee WHERE manager_id IS NULL
-
-// getEmpInfo();
-// async function getEmpInfo() {
-//     connection.query("SELECT employee_role.id, employee_role.title, employee.role_id, employee.manager_id FROM employee_role JOIN employee ON employee_role.id = employee.role_id WHERE employee.manager_id IS NULL", function (err, res) {
-//         if (err) throw err;
-//         console.log(res);
-//         // for (let i = 0; i < res.length; i++) {
-//         //     console.log(res[i].title);
-//         //    // managerNames.push(res[i].first_name + "" + res[i].last_name);
-//         // }
-//         // //return managerNames
-//         // //console.log(managerNames);
-//         // //const rows = await db.query;
-//     });
-// }
 
 // getEmpInfo2();
 // async function getEmpInfo2() {
@@ -124,12 +109,12 @@ connection.connect(function (err) {
 
 // getDepartmentId();
 // async function getDepartmentId(departmentName) {
-//     connection.query("SELECT * FROM department WHERE department.name=?", ["departmentName"], function (err, res) {
+//     connection.query("SELECT * FROM department WHERE department.name=?", ["Sales"], function (err, res) {
 //         if (err) throw err;
 //         //console.log(res);
 //         let departmentId = [];
 //         for (let i =0; i<res.length; i++) {
-//            departmentId.push(res[i].name);
+//            departmentId.push(res[i].id);
 //         }
 //         //let args = [departmentName];
 //         // return 2;
@@ -142,12 +127,12 @@ connection.connect(function (err) {
 
 // getRoleId();
 // async function getRoleId(roleName) {
-//     connection.query("SELECT * FROM department WHERE department.name=?", ["roleName"], function (err, res) {
+//     connection.query("SELECT * FROM department WHERE department.name=?", ["Dev Ops"], function (err, res) {
 //         if (err) throw err;
 //         //console.log(res);
 //         let roleId = [];
 //         for (let i = 0; i < res.length; i++) {
-//             roleId.push(res[i].name);
+//             roleId.push(res[i].id);
 //         }
 //         //let args = [departmentName];
 //         // return roleId;
@@ -263,163 +248,113 @@ connection.connect(function (err) {
 /* Database Calls: End */
 
 function runSearch() {
-            inquirer
-                .prompt({
-                    name: "action",
-                    type: "rawlist",
-                    message: "What would you like to do?",
-                    choices: [
-                        "View all Employees",
-                        "View all Departments",
-                        "View all Roles",
-                        /* (Bonus)   "View all Employees By Department",*/
-                        /* (Bonus)  "View all Employees By Manager",*/
-                        "Add Employee",
-                        /* (Bonus)   "Remove Employee",*/
-                        "Add Departments",
-                        /* (Bonus)  "Delete Departments",*/
-                        "Add Roles",
-                        "Update Employee Role",
-                        /* (Bonus)   "Remove Roles",*/
-                        /* (Bonus)  "Update Employee Manager",*/
-                        /* (Bonus)  "View Total Budget",*/
-                        /* (Bonus)    "View Total Department Budget",*/
-                        "exit",
-                    ]
-                })
-                .then(function (answer) {
-                    switch (answer.action) {
-                        case "View all Employees":
-                            viewEmployees();
-                            break;
-                        case "View all Departments":
-                            viewDepartments();
-                            break;
-                        case "View all Roles":
-                            viewRoles();
-                            break;
-                        case "Add Departments":
-                            addDepartments();
-                            break;
-                        case "Add Employee":
-                            addEmployee();
-                            break;
-                        case "Add Roles":
-                            addRoles();
-                            break;
-                        case "Update Employee Role":
-                            updateRole();
-                            break;
-                        case "exit":
-                            connection.end();
-                            break;
-                    }
-                });
+    inquirer
+        .prompt({
+            name: "action",
+            type: "rawlist",
+            message: "What would you like to do?",
+            choices: [
+                "View all Employees",
+                "View all Departments",
+                "View all Roles",
+                /* (Bonus)   "View all Employees By Department",*/
+                /* (Bonus)  "View all Employees By Manager",*/
+                "Add Employee",
+                /* (Bonus)   "Remove Employee",*/
+                "Add Departments",
+                /* (Bonus)  "Delete Departments",*/
+                "Add Roles",
+                "Update Employee Role",
+                /* (Bonus)   "Remove Roles",*/
+                /* (Bonus)  "Update Employee Manager",*/
+                /* (Bonus)  "View Total Budget",*/
+                /* (Bonus)    "View Total Department Budget",*/
+                "exit",
+            ]
+        })
+        .then(function (answer) {
+            switch (answer.action) {
+                case "View all Employees":
+                    viewEmployees();
+                    break;
+                case "View all Departments":
+                    viewDepartments();
+                    break;
+                case "View all Roles":
+                    viewRoles();
+                    break;
+                case "Add Departments":
+                    addDepartments();
+                    break;
+                case "Add Employee":
+                    addEmployee();
+                    break;
+                case "Add Roles":
+                    addRoles();
+                    break;
+                case "Update Employee Role":
+                    updateRole();
+                    break;
+                case "exit":
+                    connection.end();
+                    break;
+            }
+        });
+}
+
+function viewEmployees() {
+    //console.log("View all Employees");
+    connection.query("SELECT * FROM EmployeeTrackerDB.employee", function (err, res) {
+        if (err) throw err;
+        for (let i = 0; i < res.length; i++) {
+            console.log(
+                " First Name: " +
+                res[i].first_name +
+                " || Last Name: " +
+                res[i].last_name +
+                " || Role Id: " +
+                res[i].role_id +
+                "||  Manager Id: " +
+                res[i].manager_id
+            );
         }
+    });
+    runSearch();
+}
 
-async function viewEmployees(answer) {
-            //console.log("View all Employees");
-            connection.query("SELECT * FROM EmployeeTrackerDB.employee", function (err, res) {
-                if (err) throw err;
-                for (let i = 0; i < res.length; i++) {
-                    console.log(
-                        " First Name: " +
-                        res[i].first_name +
-                        " || Last Name: " +
-                        res[i].last_name +
-                        " || Role Id: " +
-                        res[i].role_id +
-                        "||  Manager Id: " +
-                        res[i].manager_id
-                    );
-                }
-            });
-            runSearch();
+function viewDepartments() {
+    connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
+        if (err) throw err;
+        for (let i = 0; i < res.length; i++) {
+            console.log(
+                " id: " +
+                res[i].id +
+                " || Department: " +
+                res[i].name
+            );
         }
+    });
+    runSearch();
+}
 
-async function viewDepartments() {
-            connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
-                if (err) throw err;
-                for (let i = 0; i < res.length; i++) {
-                    console.log(
-                        " id: " +
-                        res[i].id +
-                        " || Department: " +
-                        res[i].name
-                    );
-                }
-            });
-            runSearch();
+function viewRoles() {
+    console.log("View all Roles");
+    connection.query("SELECT * FROM EmployeeTrackerDB.role", function (err, res) {
+        if (err) throw err;
+        for (let i = 0; i < res.length; i++) {
+            console.log(
+                " Id: " +
+                res[i].id +
+                " || Title: " +
+                res[i].title +
+                " || Salary: " + res[i].salary +
+                "|| Department Id: " + res[i].department_id
+            );
+
         }
-
-async function viewRoles() {
-            console.log("View all Roles");
-            connection.query("SELECT * FROM EmployeeTrackerDB.role", function (err, res) {
-                if (err) throw err;
-                for (let i = 0; i < res.length; i++) {
-                    console.log(
-                        " Id: " +
-                        res[i].id +
-                        " || Title: " +
-                        res[i].title +
-                        " || Salary: " + res[i].salary +
-                        "|| Department Id: " + res[i].department_id
-                    );
-
-                }
-            });
-            runSearch();
-        }
-
-// async function addEmployee() {
-//     // // console.log("Add Employee");
-//     inquirer
-//         .prompt([
-//             {
-//                 name: "firstName",
-//                 type: "input",
-//                 message: "What is the employee's first name?",
-//             },
-//             {
-//                 name: "lastName",
-//                 type: "input",
-//                 message: "What is the employee's last name?",
-//             },
-//             {
-//                 name: "role_id",
-//                 type: "input",
-//                 message: "What is the employee's role?",
-//             },
-//             {
-//                 name: "manager_id",
-//                 type: "input",
-//                 message: "Who is the employee's manager?",
-//             }
-//         ]).then(function (answer) {
-//             createProduct();
-//             function createProduct() {
-//                 console.log("Inserting a new Employee...\n");
-//                 var query = connection.query(
-//                     "INSERT INTO employee SET ?",
-//                     {
-//                         first_name: answer.firstName,
-//                         last_name: answer.lastName,
-//                         //   role_id: answer.role_id,
-//                         //  manager_id: answer.manager_id
-//                     },
-//                     function (err, res) {
-//                         if (err) throw err;
-//                         console.log(res.affectedRows + " name inserted!\n");
-//                         // Call updateProduct AFTER the INSERT completes
-//                         //updateProduct();
-//                     }
-//                 );
-//                 // logs the actual query being run
-//                 console.log(query.sql);
-//             }
-//             runSearch();
-//         });
-// }
+    });
+    runSearch();
+}
 
 function addEmployee() {
     connection.query("SELECT title FROM role", function (err, roles) {
@@ -477,87 +412,97 @@ function addEmployee() {
             });
         }
 
-async function addDepartments() {
-            //console.log("Add Departments"); 
-            inquirer
-                .prompt([
-                    {
-                        name: "addDepartment",
-                        type: "input",
-                        message: "What Department do you want to add?",
-                    }
-                ]).then(function (answer) {
-                    console.log("Inserting a new Department...\n");
-                    connection.query(
-                        "INSERT INTO department SET ?",
-                        {
-                            name: answer.addDepartment,
-                        },
-                        function (err, res) {
-                            if (err) throw err;
-                            console.log(res.affectedRows + " name inserted!\n");
-                            // Call updateProduct AFTER the INSERT completes
-                            //updateProduct();
-                        }
-                    );
-                    // logs the actual query being run
-                    console.log(query.sql);
-                    runSearch();
-                });
-        }
-
-async function addRoles() {
-            connection.query('SELECT name FROM department', function (err, results) {
-                if (err) throw err;
-                const role = inquirer.prompt([
-                    {
-                        name: "addTitle",
-                        type: "input",
-                        message: "Enter the role you want to add?",
-                    },
-                    {
-                        name: "salary",
-                        type: "input",
-                        message: "Enter the salary for this role?",
-                    },
-                    {
-                        name: "addRole",
-                        type: "list",
-                        message: "To what department do you want to add this role?",
-                        choices: function () {
-                            let dNames = [];
-                            for (let i = 0; i < results.length; i++) {
-                                dNames.push(results[i].name);
-                            }
-                            return dNames;
-                        }
-                    }
-                ]).then(function (answer) {
-                    console.log("Inserting a new Department...\n");
-                    var query = connection.query(
-                        "INSERT INTO role SET ?",
-                        {
-                            title: answer.addTitle,
-                            salary: answer.salary,
-                        },
-                        function (err, res) {
-                            if (err) throw err;
-                            console.log(res.affectedRows + " name inserted!\n");
-                            // Call updateProduct AFTER the INSERT completes
-                            //updateProduct();
-                        }
-                    );
-                    // logs the actual query being run
-                    console.log(query.sql);
-                    runSearch();
-                    /*used to be above "inquirer.prompt*/
-                });
-            });
-        }
-
-async function updateRole() {
-            console.log("Update Employee Role");
+function addDepartments() {
+    //console.log("Add Departments"); 
+    inquirer
+        .prompt([
+            {
+                name: "addDepartment",
+                type: "input",
+                message: "What Department do you want to add?",
+            }
+        ]).then(function (answer) {
+            console.log("Inserting a new Department...\n");
+            connection.query(
+                "INSERT INTO department SET ?",
+                {
+                    name: answer.addDepartment,
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.log(res.affectedRows + " name inserted!\n");
+                    // Call updateProduct AFTER the INSERT completes
+                    //updateProduct();
+                }
+            );
+            // logs the actual query being run
+            //console.log(query.sql);
             runSearch();
-        }
+        });
+}
+
+function addRoles() {
+    connection.query('SELECT name FROM department', function (err, results) {
+        if (err) throw err;
+        const role = inquirer.prompt([
+            {
+                name: "addTitle",
+                type: "input",
+                message: "Enter the role you want to add?",
+            },
+            {
+                name: "salary",
+                type: "input",
+                message: "Enter the salary for this role?",
+            },
+            {
+                name: "addDepart",
+                type: "list",
+                message: "To what department do you want to add this role?",
+                choices: function () {
+                    let dNames = [];
+                    for (let i = 0; i < results.length; i++) {
+                        dNames.push(results[i].name);
+                    }
+                    return dNames;
+                }
+            }
+        ]).then(function (answer) {
+            console.log("Inserting a new Department...\n");
+            var query = "SELECT * FROM department WHERE department.name=?";
+            connection.query(query, [answer.addDepart], function(err, departId) {
+                if (err) throw err;
+                // console.log(idRole);
+                //console.log(idRole[0].id);
+                var idDepart = departId[0].id;
+                console.log(idDepart);
+                // const newRoleId = idRole.map(role => idRole.id);
+                // console.log(newRoleId);
+                connection.query(
+                "INSERT INTO role SET ?",
+                {
+                    title: answer.addTitle,
+                    salary: answer.salary,
+                    department_id: idDepart
+                },
+                function (err, res) {
+                    if (err) throw err;
+                   // console.log(res.affectedRows + " name inserted!\n");
+                    // Call updateProduct AFTER the INSERT completes
+                    //updateProduct();
+                }
+            );
+            // logs the actual query being run
+            console.log(query.sql);
+            runSearch();
+            });
+        });
+    });
+}
+
+function updateRole() {
+    console.log("Update Employee Role");
+    runSearch();
+}
 
 

@@ -135,6 +135,13 @@ connection.connect(function (err) {
 //     });
 // }
 
+// console.log("Inserting a new Department...\n");
+// var query = "SELECT * FROM department WHERE department.name=?";
+// connection.query(query, [answer.addRole], function(err, res) {
+//     if (err) throw err;
+//     console.log(res);
+// });
+
 // // get Role Id from the role's name: 
 
 // getRoleId();

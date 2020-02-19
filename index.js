@@ -13,28 +13,13 @@ var connection = mysql.createConnection({
 });
 connection.connect(function (err) {
     if (err) throw err;
-    runSearch();
+   runSearch();
 });
 
 /* Database Calls: Begin */
 
 // Selecting name FROM department AND * FROM employee WHERE manager_id IS NULL
 // SELECT * FROM employee WHERE manager_id IS NULL
-
-// getEmpInfo();
-// async function getEmpInfo() {
-//     connection.query("SELECT employee_role.id, employee_role.title, employee.role_id, employee.manager_id FROM employee_role JOIN employee ON employee_role.id = employee.role_id WHERE employee.manager_id IS NULL", function (err, res) {
-//         if (err) throw err;
-//         console.log(res);
-//         // for (let i = 0; i < res.length; i++) {
-//         //     console.log(res[i].title);
-//         //    // managerNames.push(res[i].first_name + "" + res[i].last_name);
-//         // }
-//         // //return managerNames
-//         // //console.log(managerNames);
-//         // //const rows = await db.query;
-//     });
-// }
 
 // getEmpInfo2();
 // async function getEmpInfo2() {
@@ -124,12 +109,12 @@ connection.connect(function (err) {
 
 // getDepartmentId();
 // async function getDepartmentId(departmentName) {
-//     connection.query("SELECT * FROM department WHERE department.name=?", ["departmentName"], function (err, res) {
+//     connection.query("SELECT * FROM department WHERE department.name=?", ["Sales"], function (err, res) {
 //         if (err) throw err;
 //         //console.log(res);
 //         let departmentId = [];
 //         for (let i =0; i<res.length; i++) {
-//            departmentId.push(res[i].name);
+//            departmentId.push(res[i].id);
 //         }
 //         //let args = [departmentName];
 //         // return 2;
@@ -142,12 +127,12 @@ connection.connect(function (err) {
 
 // getRoleId();
 // async function getRoleId(roleName) {
-//     connection.query("SELECT * FROM department WHERE department.name=?", ["roleName"], function (err, res) {
+//     connection.query("SELECT * FROM department WHERE department.name=?", ["Dev Ops"], function (err, res) {
 //         if (err) throw err;
 //         //console.log(res);
 //         let roleId = [];
 //         for (let i = 0; i < res.length; i++) {
-//             roleId.push(res[i].name);
+//             roleId.push(res[i].id);
 //         }
 //         //let args = [departmentName];
 //         // return roleId;
@@ -471,7 +456,7 @@ function addRoles() {
                 message: "Enter the salary for this role?",
             },
             {
-                name: "addRole",
+                name: "addDepart",
                 type: "list",
                 message: "To what department do you want to add this role?",
                 choices: function () {
@@ -484,15 +469,25 @@ function addRoles() {
             }
         ]).then(function (answer) {
             console.log("Inserting a new Department...\n");
-            var query = connection.query(
+            var query = "SELECT * FROM department WHERE department.name=?";
+            connection.query(query, [answer.addDepart], function(err, departId) {
+                if (err) throw err;
+                // console.log(idRole);
+                //console.log(idRole[0].id);
+                var idDepart = departId[0].id;
+                console.log(idDepart);
+                // const newRoleId = idRole.map(role => idRole.id);
+                // console.log(newRoleId);
+                connection.query(
                 "INSERT INTO role SET ?",
                 {
                     title: answer.addTitle,
                     salary: answer.salary,
+                    department_id: idDepart
                 },
                 function (err, res) {
                     if (err) throw err;
-                    console.log(res.affectedRows + " name inserted!\n");
+                   // console.log(res.affectedRows + " name inserted!\n");
                     // Call updateProduct AFTER the INSERT completes
                     //updateProduct();
                 }
@@ -500,7 +495,7 @@ function addRoles() {
             // logs the actual query being run
             console.log(query.sql);
             runSearch();
-            /*used to be above "inquirer.prompt*/
+            });
         });
     });
 }
