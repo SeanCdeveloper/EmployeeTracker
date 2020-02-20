@@ -293,7 +293,7 @@ function runSearch() {
                     addRoles();
                     break;
                 case "Update Employee Role":
-                    updateRole();
+                    updateEmployeeRole();
                     break;
                 case "Delete Employee":
                     deleteEmployee();
@@ -492,7 +492,7 @@ function addRoles() {
     });
 }
 
-function updateRole() {
+function updateEmployeeRole() {
     connection.query('SELECT * FROM employee', function (err, eNames) {
         if (err) throw err;
         connection.query("SELECT title FROM role", function (err, roles) {
