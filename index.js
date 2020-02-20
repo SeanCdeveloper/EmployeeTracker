@@ -226,7 +226,7 @@ connection.connect(function (err) {
 //             });
 // }
 
-//  removeEmployee();
+//  deleteEmployee();
 // async function removeEmployee(employeeInfo) {
 //    // const EmployeeName = getFirstAndLastName(employeeInfo.employeeName);
 //         connection.query("DELETE from employee WHERE first_name=? AND last_name=? VALUES ('Darth', 'Vader')", function (err, res) {
@@ -260,7 +260,7 @@ function runSearch() {
                 /* (Bonus)   "View all Employees By Department",*/
                 /* (Bonus)  "View all Employees By Manager",*/
                 "Add Employee",
-                /* (Bonus)   "Remove Employee",*/
+                "Delete Employee",
                 "Add Departments",
                 /* (Bonus)  "Delete Departments",*/
                 "Add Roles",
@@ -294,6 +294,9 @@ function runSearch() {
                     break;
                 case "Update Employee Role":
                     updateRole();
+                    break;
+                case "Delete Employee":
+                    deleteEmployee();
                     break;
                 case "exit":
                     connection.end();
@@ -396,7 +399,7 @@ function addEmployee() {
                         let query2 = "SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name=?"
                         connection.query(query2, answer.manager_id.split(" "), function (err, idManager) {
                             if (err) throw err;
-                        let managerId =  idManager[0].id;
+                            let managerId = idManager[0].id;
                             connection.query(
                                 "INSERT INTO employee SET ?",
                                 {
@@ -490,51 +493,73 @@ function addRoles() {
 }
 
 function updateRole() {
-     connection.query('SELECT * FROM employee', function (err, eNames) {
+    connection.query('SELECT * FROM employee', function (err, eNames) {
         if (err) throw err;
-        connection.query("SELECT title FROM role", function(err, roles){
+        connection.query("SELECT title FROM role", function (err, roles) {
             if (err) throw err;
             const empNames = eNames.map(name => name.first_name + " " + name.last_name);
             const roleT = roles.map(title => title.title)
             inquirer
+                .prompt([
+                    {
+                        name: "employeeSearch",
+                        type: "list",
+                        message: "Which employee do you want to update?",
+                        choices: [...empNames]
+                    },
+                    {
+                        name: "titleOfRole",
+                        type: "list",
+                        message: "What is this employee's new role?",
+                        choices: [...roleT]
+                    },
+                ]).then(function (answer) {
+                    let roleTitle = answer.titleOfRole;
+                    let searchEmployee = answer.employeeSearch.split(" ");
+                    let query = "SELECT id FROM role WHERE role.title=?"
+                    connection.query(query, answer.titleOfRole, function (err, res) {
+                        if (err) throw err;
+                        let newEmpRoleId = res[0].id;
+                    let query = ("UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?");
+                    connection.query(query, [newEmpRoleId, searchEmployee[0], searchEmployee[1]], function (err, res) {
+                        if (err) throw err;
+                        //console.log(res);
+                    });
+                    runSearch();
+                    });
+                });
+        })
+    });
+}
+
+function deleteEmployee() {
+    connection.query("SELECT * FROM employee", function (req, emp) {
+        const empName = emp.map(employees => employees.first_name + " " + employees.last_name);
+        inquirer
             .prompt([
                 {
-                    name: "employeeSearch",
+                    name: "deleteEmployee",
                     type: "list",
-                    message: "Which employee do you want to update?",
-                    choices: [...empNames]
-                },
-                {
-                    name: "titleOfRole",
-                    type: "list",
-                    message: "What is this employee's new role?",
-                    choices: [...roleT]
-                },
-            ]).then(function(answer) {
-                let roleTitle = answer.titleOfRole;
-                let searchEmployee = answer.employeeSearch.split(" ");
-                console.log(roleTitle);
-                console.log(searchEmployee);
-                console.log(searchEmployee[0]);
-                console.log(searchEmployee[1]);
-                 let query = ("UPDATE employee SET role_id? WHERE employee.first_name=? AND employee.last_name=?");
-                   const filter = [roleTitle, searchEmployee[0], searchEmployee[1]];
-                     console.log(filter);
-                 connection.query( query, [roleTitle, searchEmployee[0], searchEmployee[1]] , function (err, res) {
-                    if (err) throw err;
-                    console.log(res);
-                 })
+                    message: "Which employee do you want to delete?",
+                    choices: [...empName]
+                }
+        ]).then((answer) => {
+            console.log(answer.deleteEmployee.split(" "));
+            let query = "DELETE FROM employee WHERE first_name=? AND last_name=?"
+            connection.query(query, answer.deleteEmployee, function(req, res) {
+                console.log(res);
+                if (err) throw err;
             });
-        })     
-     });
+        })
+    })
 }
 
 
 
 
 
-/* Which employee do you want to update? Then, list all of the available employees of which to choose. 
-Then, list all of the available roles of which to choose.  
+/* Which employee do you want to update? Then, list all of the available employees of which to choose.
+Then, list all of the available roles of which to choose.
 */
 
 
