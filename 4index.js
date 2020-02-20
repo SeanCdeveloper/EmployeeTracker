@@ -258,7 +258,7 @@ function runSearch() {
                 "View all Departments",
                 "View all Roles",
                 "View all Employees By Department",
-                /* (Bonus)  "View all Employees By Manager",*/
+                "View all Employees By Manager",
                 "Add Employee",
                 "Delete Employee",
                 "Add Departments",
@@ -285,6 +285,9 @@ function runSearch() {
                     break;
                 case "View all Employees By Department":
                     viewAllEmployeesByDepartment();
+                    break;
+                case "View all Employees By Manager":
+                    viewAllEmployeesByManager();
                     break;
                 case "Add Departments":
                     addDepartments();

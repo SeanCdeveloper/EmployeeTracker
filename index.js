@@ -258,7 +258,7 @@ function runSearch() {
                 "View all Departments",
                 "View all Roles",
                 "View all Employees By Department",
-                /* (Bonus)  "View all Employees By Manager",*/
+                "View all Employees By Manager",
                 "Add Employee",
                 "Delete Employee",
                 "Add Departments",
@@ -285,6 +285,9 @@ function runSearch() {
                     break;
                 case "View all Employees By Department":
                     viewAllEmployeesByDepartment();
+                    break;
+                case "View all Employees By Manager":
+                    viewAllEmployeesByManager();
                     break;
                 case "Add Departments":
                     addDepartments();
@@ -400,6 +403,38 @@ function viewAllEmployeesByDepartment() {
     });
 }
 
+function viewAllEmployeesByManager() {
+        connection.query("SELECT * FROM employee", function(err, res) {
+            const allEmployees = res.map(employeeName => employeeName.first_name + " " + employeeName.last_name + " || Employee Id: " + employeeName.id + " || Manager Id: " + employeeName.manager_id);
+            // console.log(allEmployees);
+            const EmployeeId = res.map(empId => empId.id + "|| " + empId.first_name + " " + empId.last_name);
+            console.log(EmployeeId);
+            const Managers = res.filter(nullN => nullN.manager_id === null);
+            //  console.log(Managers);
+            const mFullName = Managers.map(fullNames => fullNames.first_name + " " + fullNames.last_name);
+            console.log(mFullName);
+            const mID = Managers.map(mgrId => mgrId.id);
+            console.log(mID);
+             // const filter = allEmployees.filter(managerCheck);
+    });
+}
+/*
+   function managerCheck() {
+                if (`${mID}` === `${EmployeeId}`) {
+                    console.log();
+                }
+            }
+
+var ages = [32, 33, 16, 40];
+
+console.log(ages.filter(checkAge));
+
+function checkAge(age) {
+  if (age > 20 && age < 35) {
+    return age;
+  }
+} 
+*/
 function viewDepartments() {
     connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
         if (err) throw err;
