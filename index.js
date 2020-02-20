@@ -265,7 +265,7 @@ function runSearch() {
                 "Delete Department",
                 "Add Roles",
                 "Update Employee Role",
-                /* (Bonus)   "Remove Roles",*/
+                "Delete Role",
                 /* (Bonus)  "Update Employee Manager",*/
                 /* (Bonus)  "View Total Budget",*/
                 /* (Bonus)    "View Total Department Budget",*/
@@ -301,6 +301,9 @@ function runSearch() {
                 case "Update Employee Role":
                     updateEmployeeRole();
                     break;
+                case "Delete Role":
+                    deleteRole();
+                    break;
                 case "Delete Employee":
                     deleteEmployee();
                     break;
@@ -309,6 +312,34 @@ function runSearch() {
                     break;
             }
         });
+}
+
+function deleteRole() {
+    let query = "SELECT title FROM role";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        let dRolez = res.map(role => role.title);
+        inquirer
+            .prompt([
+                {
+                    name: "deleteRole",
+                    type: "list",
+                    message: "What Role do you want to delete?",
+                    choices: [...dRolez]
+                }
+            ]).then((answer) => {
+                let query2 = "SELECT * FROM role WHERE role.title=?";
+                connection.query(query2, answer.deleteRole, function (err, res) {
+                    if (err) throw err;
+                    let roleDel = res[0].id;
+                    let query3 = "DELETE FROM role WHERE role.id=?"
+                    connection.query(query3, roleDel, function (err, res) {
+                        if (err) throw err;
+                    });
+                    runSearch();
+                });
+            });
+    });
 }
 
 function deleteDepartment() {
