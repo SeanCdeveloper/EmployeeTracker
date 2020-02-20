@@ -226,7 +226,7 @@ connection.connect(function (err) {
 //             });
 // }
 
-// removeEmployee();
+//  removeEmployee();
 // async function removeEmployee(employeeInfo) {
 //    // const EmployeeName = getFirstAndLastName(employeeInfo.employeeName);
 //         connection.query("DELETE from employee WHERE first_name=? AND last_name=? VALUES ('Darth', 'Vader')", function (err, res) {
@@ -511,14 +511,17 @@ function updateRole() {
                     choices: [...roleT]
                 },
             ]).then(function(answer) {
-                var roleTitle = answer.titleOfRole;
-                var searchEmployee = answer.employeeSearch.split(" ");
-                console.log("this",roleTitle);
-                console.log("this",searchEmployee);
-                 let query = ("UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?");
-                 var filter = [roleTitle, searchEmployee];
-                 //console.log(filter);
-                 connection.query( query, filter, function (err, res) {
+                let roleTitle = answer.titleOfRole;
+                let searchEmployee = answer.employeeSearch.split(" ");
+                console.log(roleTitle);
+                console.log(searchEmployee);
+                console.log(searchEmployee[0]);
+                console.log(searchEmployee[1]);
+                 let query = ("UPDATE employee SET role_id? WHERE employee.first_name=? AND employee.last_name=?");
+                   const filter = [roleTitle, searchEmployee[0], searchEmployee[1]];
+                     console.log(filter);
+                 connection.query( query, [roleTitle, searchEmployee[0], searchEmployee[1]] , function (err, res) {
+                    if (err) throw err;
                     console.log(res);
                  })
             });
@@ -526,6 +529,12 @@ function updateRole() {
      });
 }
 
+
+
+
+
 /* Which employee do you want to update? Then, list all of the available employees of which to choose. 
 Then, list all of the available roles of which to choose.  
 */
+
+
