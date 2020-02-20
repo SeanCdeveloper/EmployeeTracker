@@ -544,22 +544,17 @@ function deleteEmployee() {
                     choices: [...empName]
                 }
         ]).then((answer) => {
-            console.log(answer.deleteEmployee.split(" "));
+            var deleteEmpFullName = answer.deleteEmployee.split(" ");
             let query = "DELETE FROM employee WHERE first_name=? AND last_name=?"
-            connection.query(query, answer.deleteEmployee, function(req, res) {
-                console.log(res);
+            connection.query(query, [deleteEmpFullName[0], deleteEmpFullName[1]], function(err, res) {
                 if (err) throw err;
             });
+            runSearch();
         })
     })
 }
 
 
 
-
-
-/* Which employee do you want to update? Then, list all of the available employees of which to choose.
-Then, list all of the available roles of which to choose.
-*/
 
 
