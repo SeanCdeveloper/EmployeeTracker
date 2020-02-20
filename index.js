@@ -262,7 +262,7 @@ function runSearch() {
                 "Add Employee",
                 "Delete Employee",
                 "Add Departments",
-                /* (Bonus)  "Delete Departments",*/
+                "Delete Department",
                 "Add Roles",
                 "Update Employee Role",
                 /* (Bonus)   "Remove Roles",*/
@@ -289,6 +289,9 @@ function runSearch() {
                 case "Add Departments":
                     addDepartments();
                     break;
+                case "Delete Department":
+                    deleteDepartment();
+                    break;
                 case "Add Employee":
                     addEmployee();
                     break;
@@ -306,6 +309,22 @@ function runSearch() {
                     break;
             }
         });
+}
+
+function deleteDepartment() {
+    var query = "SELECT * FROM department";
+    connection.query(query, function (err, deparName) {
+        const depName = deparName.map(name => name.name);
+        inquirer
+            .prompt([
+                {
+                    name: "deleteDName",
+                    type: "list",
+                    message: "What Department do you want to delete?",
+                    choices: [...depName]
+                }
+            ])
+    });
 }
 
 function viewEmployees() {
