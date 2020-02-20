@@ -323,7 +323,17 @@ function deleteDepartment() {
                     message: "What Department do you want to delete?",
                     choices: [...depName]
                 }
-            ])
+            ]).then((answer) => {
+                var query = "SELECT id FROM department WHERE department.name=?";
+                connection.query(query, answer.deleteDName, function (err, res) {
+                    let dId = res[0].id;
+                    query2 = "DELETE FROM department WHERE department.id=?";
+                    connection.query(query2, dId, function (err, res) {
+                        if (err) throw err;
+                    });
+                    runSearch();
+                })
+            })
     });
 }
 
@@ -579,7 +589,7 @@ function deleteEmployee() {
                 }
             ]).then((answer) => {
                 var deleteEmpFullName = answer.deleteEmployee.split(" ");
-                let query = "DELETE FROM employee WHERE first_name=? AND last_name=?"
+                let query = "DELETE FROM employee WHERE first_name=? AND last_name=?";
                 connection.query(query, [deleteEmpFullName[0], deleteEmpFullName[1]], function (err, res) {
                     if (err) throw err;
                 });
