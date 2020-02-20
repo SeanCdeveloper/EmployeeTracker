@@ -490,8 +490,42 @@ function addRoles() {
 }
 
 function updateRole() {
-    console.log("Update Employee Role");
-    runSearch();
+     connection.query('SELECT * FROM employee', function (err, eNames) {
+        if (err) throw err;
+        connection.query("SELECT title FROM role", function(err, roles){
+            if (err) throw err;
+            const empNames = eNames.map(name => name.first_name + " " + name.last_name);
+            const roleT = roles.map(title => title.title)
+            inquirer
+            .prompt([
+                {
+                    name: "employeeSearch",
+                    type: "list",
+                    message: "Which employee do you want to update?",
+                    choices: [...empNames]
+                },
+                {
+                    name: "titleOfRole",
+                    type: "list",
+                    message: "What is this employee's new role?",
+                    choices: [...roleT]
+                },
+            ]).then(function(answer) {
+                var roleTitle = answer.titleOfRole;
+                var searchEmployee = answer.employeeSearch.split(" ");
+                console.log("this",roleTitle);
+                console.log("this",searchEmployee);
+                 let query = ("UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?");
+                 var filter = [roleTitle, searchEmployee];
+                 //console.log(filter);
+                 connection.query( query, filter, function (err, res) {
+                    console.log(res);
+                 })
+            });
+        })     
+     });
 }
 
-
+/* Which employee do you want to update? Then, list all of the available employees of which to choose. 
+Then, list all of the available roles of which to choose.  
+*/
