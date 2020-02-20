@@ -257,7 +257,7 @@ function runSearch() {
                 "View all Employees",
                 "View all Departments",
                 "View all Roles",
-                /* (Bonus)   "View all Employees By Department",*/
+                "View all Employees By Department",
                 /* (Bonus)  "View all Employees By Manager",*/
                 "Add Employee",
                 "Delete Employee",
@@ -282,6 +282,9 @@ function runSearch() {
                     break;
                 case "View all Roles":
                     viewRoles();
+                    break;
+                case "View all Employees By Department":
+                    viewAllEmployeesByDepartment();
                     break;
                 case "Add Departments":
                     addDepartments();
@@ -323,6 +326,19 @@ function viewEmployees() {
         }
     });
     runSearch();
+}
+
+
+function viewAllEmployeesByDepartment() {
+    connection.query("SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);", function (err, res) {
+        if (err) throw err;
+        console.log(res);
+        //  employeeByDepartment= [];
+        for (let i = 0; i < res.length; i++) {
+            console.log(res[i].first_name + " " + res[i].last_name + " | Department: " + res[i].name);
+        }
+        runSearch();
+    });
 }
 
 function viewDepartments() {
@@ -520,12 +536,12 @@ function updateEmployeeRole() {
                     connection.query(query, answer.titleOfRole, function (err, res) {
                         if (err) throw err;
                         let newEmpRoleId = res[0].id;
-                    let query = ("UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?");
-                    connection.query(query, [newEmpRoleId, searchEmployee[0], searchEmployee[1]], function (err, res) {
-                        if (err) throw err;
-                        //console.log(res);
-                    });
-                    runSearch();
+                        let query = ("UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?");
+                        connection.query(query, [newEmpRoleId, searchEmployee[0], searchEmployee[1]], function (err, res) {
+                            if (err) throw err;
+                            //console.log(res);
+                        });
+                        runSearch();
                     });
                 });
         })
@@ -543,18 +559,16 @@ function deleteEmployee() {
                     message: "Which employee do you want to delete?",
                     choices: [...empName]
                 }
-        ]).then((answer) => {
-            var deleteEmpFullName = answer.deleteEmployee.split(" ");
-            let query = "DELETE FROM employee WHERE first_name=? AND last_name=?"
-            connection.query(query, [deleteEmpFullName[0], deleteEmpFullName[1]], function(err, res) {
-                if (err) throw err;
-            });
-            runSearch();
-        })
+            ]).then((answer) => {
+                var deleteEmpFullName = answer.deleteEmployee.split(" ");
+                let query = "DELETE FROM employee WHERE first_name=? AND last_name=?"
+                connection.query(query, [deleteEmpFullName[0], deleteEmpFullName[1]], function (err, res) {
+                    if (err) throw err;
+                });
+                runSearch();
+            })
     })
 }
-
-
 
 
 
