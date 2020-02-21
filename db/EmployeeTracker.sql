@@ -1,4 +1,5 @@
 DROP DATABASE IF EXISTS EmployeeTrackerDB;
+
 CREATE database EmployeeTrackerDB;
 
 USE EmployeeTrackerDB;
@@ -42,19 +43,16 @@ INSERT into role (title, salary, department_id) VALUES ("Financial Advisor", 300
 INSERT into role (title, salary, department_id) VALUES ("Dev Ops", 80000, 4);
 INSERT into role (title, salary, department_id) VALUES ("Programmer", 80000, 4);
 
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("John", "MadeUP", 1, null);
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("DOM", "Nodes", 2, 1);
+INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("DOM", "Nodes", 1, null);
+INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("John", "MadeUP", 2, 1);
 INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Chris", "Random", 2, 1);
 
 INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Albert", "E", 3, null);
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Random", "Johannson", 4, 3);
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("John", "Doe", 4, 3);
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Jane", "Doe", 4, 3);
+INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("John", "Doe", 4, 4);
+INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Jane", "Doe", 4, 7);
 
 INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Boss", "Man", 5, null);
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("John", "Ross", 6, 5);
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Marley", 7, 5);
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Dylan", 7, 5);
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Arrays", "Johnson", 8, 5);
-
-INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Luke", "Troi", 9, null);
+INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("AJAX", "Ross", 6, 4);
+INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Array", 7, 7);
+INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Galileo", "Dylan", 7, 4);
+INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Arrays", "Johnson", 8, 7);

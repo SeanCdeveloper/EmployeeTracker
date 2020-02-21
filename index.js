@@ -404,7 +404,7 @@ function viewEmployees() {
 
 function viewAllEmployeesByDepartment() {
     connection.query("SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);", function (err, res) {
-        if (err) throw err; f
+        if (err) throw err; 
         console.log(res);
         //  employeeByDepartment= [];
         for (let i = 0; i < res.length; i++) {
@@ -436,6 +436,10 @@ function viewAllEmployeesByManager() {
         // const filter = allEmployees.filter(managerCheck);
     });
 }
+
+    updateEmployeeManager = () => {
+        connection.query(SELECT * FROM )
+    }
 
 function viewDepartments() {
     connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
