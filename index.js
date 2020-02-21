@@ -267,7 +267,7 @@ function runSearch() {
                 "Update Employee Role",
                 "Delete Role",
                 /* (Bonus)  "Update Employee Manager",  */
-                /* (Bonus)  "View Total Budget",*/
+                "View Total Budget",
                 /* (Bonus)    "View Total Department Budget",*/
                 "exit",
             ]
@@ -310,11 +310,22 @@ function runSearch() {
                 case "Delete Employee":
                     deleteEmployee();
                     break;
+                case "View Total Budget":
+                    viewTotalBudget();
+                    break;
                 case "exit":
                     connection.end();
                     break;
             }
         });
+}
+
+let viewTotalBudget = () => {
+    connection.query("SELECT SUM(salary) FROM role", (err, res) => {
+        if (err) throw err;
+        console.log(res[0]);
+    });
+    runSearch();
 }
 
 function deleteRole() {
@@ -393,7 +404,7 @@ function viewEmployees() {
 
 function viewAllEmployeesByDepartment() {
     connection.query("SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);", function (err, res) {
-        if (err) throw err;f
+        if (err) throw err; f
         console.log(res);
         //  employeeByDepartment= [];
         for (let i = 0; i < res.length; i++) {
@@ -404,25 +415,25 @@ function viewAllEmployeesByDepartment() {
 }
 
 function viewAllEmployeesByManager() {
-        connection.query("SELECT * FROM employee", function(err, res) {
-            const allEmployees = res.map(employeeName => employeeName.first_name + " " + employeeName.last_name + " || Employee Id: " + employeeName.id + " || Manager Id: " + employeeName.manager_id);
-           // console.log(allEmployees);
-            const EmployeeId = res.map(empId => empId.id + "|| " + empId.first_name + " " + empId.last_name);
-           // console.log(EmployeeId);
-            const Managers = res.filter(nullN => nullN.manager_id === null);
+    connection.query("SELECT * FROM employee", function (err, res) {
+        const allEmployees = res.map(employeeName => employeeName.first_name + " " + employeeName.last_name + " || Employee Id: " + employeeName.id + " || Manager Id: " + employeeName.manager_id);
+        // console.log(allEmployees);
+        const EmployeeId = res.map(empId => empId.id + "|| " + empId.first_name + " " + empId.last_name);
+        // console.log(EmployeeId);
+        const Managers = res.filter(nullN => nullN.manager_id === null);
 
-            const managedEmployees = {};
-            Managers.forEach(manager => {
-                const managedEmployee = res.filter(employee => employee.id !== manager.id)
-                managedEmployees[manager] = managedEmployee;
-            });
-            console.log("Managed employees object", managedEmployees);
-            console.log(Managers);
-            const mFullName = Managers.map(fullNames => fullNames.first_name + " " + fullNames.last_name);
-            //console.log(mFullName);
-            const mID = Managers.map(mgrId => mgrId.id);
-           // console.log(mID);
-             // const filter = allEmployees.filter(managerCheck);
+        const managedEmployees = {};
+        Managers.forEach(manager => {
+            const managedEmployee = res.filter(employee => employee.id !== manager.id)
+            managedEmployees[manager] = managedEmployee;
+        });
+        console.log("Managed employees object", managedEmployees);
+        console.log(Managers);
+        const mFullName = Managers.map(fullNames => fullNames.first_name + " " + fullNames.last_name);
+        //console.log(mFullName);
+        const mID = Managers.map(mgrId => mgrId.id);
+        // console.log(mID);
+        // const filter = allEmployees.filter(managerCheck);
     });
 }
 
