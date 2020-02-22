@@ -37,7 +37,6 @@ function runSearch() {
                 "Delete Role",
                 "Update Employee Manager",
                 "View Total Budget",
-                /* (Bonus)    "View Total Department Budget",*/
                 "exit",
             ]
         })
@@ -177,7 +176,6 @@ function viewEmployees() {
 function viewAllEmployeesByDepartment() {
     connection.query("SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);", function (err, res) {
         if (err) throw err;
-        console.log(res);
         //  employeeByDepartment= [];
         for (let i = 0; i < res.length; i++) {
             console.log(res[i].first_name + " " + res[i].last_name + " | Department: " + res[i].name);
@@ -186,29 +184,20 @@ function viewAllEmployeesByDepartment() {
     });
 }
 
-function viewAllEmployeesByManager() {
-    connection.query("SELECT * FROM employee", function (err, res) {
-        const allEmployees = res.map(employeeName => employeeName.first_name + " " + employeeName.last_name + " || Employee Id: " + employeeName.id + " || Manager Id: " + employeeName.manager_id);
-        // console.log(allEmployees);
-        const EmployeeId = res.map(empId => empId.id + "|| " + empId.first_name + " " + empId.last_name);
-        // console.log(EmployeeId);
-        const Managers = res.filter(nullN => nullN.manager_id === null);
-
-        const managedEmployees = {};
-        Managers.forEach(manager => {
-            const managedEmployee = res.filter(employee => employee.id !== manager.id)
-            managedEmployees[manager] = managedEmployee;
+    function viewAllEmployeesByManager() {
+        connection.query("SELECT * FROM employee WHERE manager_id IS NOT NULL", function (err, emps) {
+            if (err) throw err;
+            connection.query("SELECT * FROM employee WHERE manager_id IS NULL", function(err, mngrs) {
+                if (err) throw err;
+                let managers = mngrs.map(mngr => mngr.first_name + " " + mngr.last_name + " " + mngr.id);
+                let employees = emps.map(emp => emp.first_name + " " + emp.last_name + " " + emp.manager_id);
+                console.log(employees);
+                console.log(managers);
+            })
+            runSearch();
         });
-        console.log("Managed employees object", managedEmployees);
-        console.log(Managers);
-        const mFullName = Managers.map(fullNames => fullNames.first_name + " " + fullNames.last_name);
-        //console.log(mFullName);
-        const mID = Managers.map(mgrId => mgrId.id);
-        // console.log(mID);
-        // const filter = allEmployees.filter(managerCheck);
-    });
-}
-
+    }
+       
 function updateEmployeeManager() {
     
     connection.query("SELECT * FROM employee WHERE manager_id IS NOT NULL", function (err, emps) {
@@ -241,12 +230,14 @@ function updateEmployeeManager() {
                     let query2 = "UPDATE employee SET manager_id=? WHERE employee.first_name=? AND employee.last_name=?";
                     connection.query(query2, [newManagerId, changedEmp[0], changedEmp[1]], function (err, res) {
                         if (err) throw err;
-                        console.log(res);
                     });
+     
                 })
+
             })
         });
     });
+    runSearch();
 }
 
 function viewDepartments() {
