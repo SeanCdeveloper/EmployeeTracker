@@ -35,7 +35,7 @@ function runSearch() {
                 "Add Roles",
                 "Update Employee Role",
                 "Delete Role",
-                "Update Employee Manager",
+                "Update Employee Manager", 
                 "View Total Budget",
                 /* (Bonus)    "View Total Department Budget",*/
                 "exit",
@@ -72,9 +72,6 @@ function runSearch() {
                     break;
                 case "Update Employee Role":
                     updateEmployeeRole();
-                    break;
-                case "Update Employee Manager":
-                    updateEmployeeManager();
                     break;
                 case "Delete Role":
                     deleteRole();
@@ -176,7 +173,7 @@ function viewEmployees() {
 
 function viewAllEmployeesByDepartment() {
     connection.query("SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);", function (err, res) {
-        if (err) throw err;
+        if (err) throw err; 
         console.log(res);
         //  employeeByDepartment= [];
         for (let i = 0; i < res.length; i++) {
@@ -209,45 +206,11 @@ function viewAllEmployeesByManager() {
     });
 }
 
-function updateEmployeeManager() {
-    
-    connection.query("SELECT * FROM employee WHERE manager_id IS NOT NULL", function (err, emps) {
-        if (err) throw err;
-        connection.query("SELECT * FROM employee WHERE manager_id IS NULL", function (err, mngrs) {
-            if (err) throw err;
-            let employees = emps.map(emp => emp.first_name + " " + emp.last_name);
-            let managers = mngrs.map(mngr => mngr.first_name + " " + mngr.last_name);
-            inquirer.prompt([
-                {
-                    name: "empChange",
-                    type: "list",
-                    message: "Which employee will receive a manager change?",
-                    choices: [...employees]
-                },
-                {
-                    name: "mngrChange",
-                    type: "list",
-                    message: "Who is the employee's new manager?",
-                    choices: [...managers]
-                }
-            ]).then(function (answer) {
-                let manager = answer.mngrChange.split(" ");
-                let changedEmp = answer.empChange.split(" ");
-                let query = "SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name=?"
-                connection.query(query, [manager[0], manager[1]], function (err, res) {
-                    if (err) throw err;
-                    let newManagerId = res[0].id;
-                    // console.log(newManagerId);
-                    let query2 = "UPDATE employee SET manager_id=? WHERE employee.first_name=? AND employee.last_name=?";
-                    connection.query(query2, [newManagerId, changedEmp[0], changedEmp[1]], function (err, res) {
-                        if (err) throw err;
-                        console.log(res);
-                    });
-                })
-            })
+    updateEmployeeManager = () => {
+        connection.query("SELECT first_name, last_name, manager_id FROM employee", () => {
+            console.log(res);
         });
-    });
-}
+    }
 
 function viewDepartments() {
     connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
