@@ -94,7 +94,9 @@ function runSearch() {
 let viewTotalBudget = () => {
     connection.query("SELECT SUM(salary) FROM role", (err, res) => {
         if (err) throw err;
-        console.log(res[0]);
+        let add1 = res[0];
+        let {'SUM(salary)': added} = add1;
+        console.log(added);
     });
     runSearch();
 }
