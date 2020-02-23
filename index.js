@@ -153,20 +153,17 @@ function deleteDepartment() {
 }
 
 function viewEmployees() {
-    connection.query("SELECT * FROM EmployeeTrackerDB.employee", function (err, res) {
+    let query = "SELECT employee.id AS 'ID', first_name AS 'First_Name', last_name AS 'Last_Name', role.title AS 'Title', department.name AS 'Department', role.salary AS 'Salary', manager_id FROM employee, role, department WHERE employee.role_id = role.id AND role.department_id = department.id ORDER BY employee.id"
+    connection.query(query, function (err, res) {
         if (err) throw err;
+        console.log("=========================================\n")
         for (let i = 0; i < res.length; i++) {
             console.log(
-                " First Name: " +
-                res[i].first_name +
-                " || Last Name: " +
-                res[i].last_name +
-                " || Role Id: " +
-                res[i].role_id +
-                "||  Manager Id: " +
-                res[i].manager_id
-            );
-        }
+                res[i].First_Name + " " +
+                res[i].Last_Name + " | " + 
+                res[i].Title + " | " + res[i].Department + 
+                " | " + res[i].Salary);
+            }
     });
     runSearch();
 }
@@ -174,8 +171,9 @@ function viewEmployees() {
 function viewAllEmployeesByDepartment() {
     connection.query("SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);", function (err, res) {
         if (err) throw err;
+        console.log("=========================================\n")
         for (let i = 0; i < res.length; i++) {
-            console.log(res[i].first_name + " " + res[i].last_name + " | Department: " + res[i].name);
+            console.log(res[i].first_name + " " + res[i].last_name + " |" + " " + res[i].name);
         }
         runSearch();
     });
@@ -188,8 +186,8 @@ function viewAllEmployeesByDepartment() {
                 if (err) throw err;
                 let managers = mngrs.map(mngr => mngr.first_name + " " + mngr.last_name + " " + mngr.id);
                 let employees = emps.map(emp => emp.first_name + " " + emp.last_name + " " + emp.manager_id);
-                console.log(employees);
-                console.log(managers);
+                console.log("============\n", "Employees : \n", employees);
+                console.log("Managers : ", managers);
             })
             runSearch();
         });
@@ -236,11 +234,12 @@ function viewAllEmployeesByDepartment() {
 function viewDepartments() {
     connection.query("SELECT * FROM EmployeeTrackerDB.department", function (err, res) {
         if (err) throw err;
+        console.log("======================================================\n")
         for (let i = 0; i < res.length; i++) {
             console.log(
                 " id: " +
                 res[i].id +
-                " || Department: " +
+                "| "+
                 res[i].name
             );
         }
@@ -249,19 +248,20 @@ function viewDepartments() {
 }
 
 function viewRoles() {
-    console.log("View all Roles");
-    connection.query("SELECT * FROM EmployeeTrackerDB.role", function (err, res) {
+    var query = "SELECT role.id AS 'ID', role.title AS 'Title', department.name AS 'Department', role.salary AS 'Salary' FROM employee, role, department WHERE employee.role_id = role.id AND role.department_id = department.id ORDER BY role.id";
+    connection.query(query, function (err, res) {
         if (err) throw err;
+       // console.log(res);
+        console.log("==================================================================\n")
         for (let i = 0; i < res.length; i++) {
             console.log(
                 " Id: " +
-                res[i].id +
-                " || Title: " +
-                res[i].title +
-                " || Salary: " + res[i].salary +
-                "|| Department Id: " + res[i].department_id
+                res[i].ID +
+                " | Title: " +
+                res[i].Title +
+                " | Salary: " + res[i].Salary +
+                " | Department: " + res[i].Department
             );
-
         }
     });
     runSearch();
