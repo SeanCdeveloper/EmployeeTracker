@@ -1,8 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-// const { getAllDepartmentNames } = require('./department');
-// const { getDepartmentID } = require('./dataStore');
-// const { getAllRoles } = require('../dataStore');
+
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -63,7 +61,7 @@ function runSearch() {
                     break;
                 case "Delete Department":
                     deleteDepartment();
-                    break;
+                     break;
                 case "Add Employee":
                     addEmployee();
                     break;
@@ -96,6 +94,14 @@ let viewTotalBudget = () => {
     connection.query("SELECT SUM(salary) FROM role", (err, res) => {
         if (err) throw err;
         console.log(res[0]);
+        let add1 = res[0];
+        let {'SUM(salary)': added} = add1;
+        console.log(added);
+        var formatter = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD"
+          });
+          console.log(formatter.format(added));
     });
     runSearch();
 }
@@ -156,8 +162,13 @@ function deleteDepartment() {
 
 function viewEmployees() {
     //console.log("View all Employees");
-    connection.query("SELECT * FROM EmployeeTrackerDB.employee", function (err, res) {
+    connection.query("SELECT * FROM employee", function (err, res) {
         if (err) throw err;
+        //console.log(res);
+        let roleId = res.map(role => role.role_id);
+        let manId = res.map(mngr => mngr.manager_id);
+        console.log("manager", manId);
+        console.log("role", roleId);
         for (let i = 0; i < res.length; i++) {
             console.log(
                 " First Name: " +
@@ -169,7 +180,7 @@ function viewEmployees() {
                 "||  Manager Id: " +
                 res[i].manager_id
             );
-        }
+            }
     });
     runSearch();
 }
@@ -183,8 +194,8 @@ function viewAllEmployeesByDepartment() {
         runSearch();
     });
 }
-
-function viewAllEmployeesByManager() {
+ 
+viewAllEmployeesByManager = () => {
     connection.query("SELECT * FROM employee WHERE manager_id IS NOT NULL", function (err, emps) {
         if (err) throw err;
         connection.query("SELECT * FROM employee WHERE manager_id IS NULL", function(err, mngrs) {
@@ -196,15 +207,6 @@ function viewAllEmployeesByManager() {
         })
     });
 }
-
-
-// function viewAllEmployeesByManager() {
-//     connection.query("SELECT id and manager_name FROM employee WHERE ", function (err, res) {
-//         console.log(res);
-// });
-// }
-/*SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) 
-INNER JOIN department ON department_id = department.id);"*/
 
 function updateEmployeeManager() {
     connection.query("SELECT * FROM employee WHERE manager_id IS NOT NULL", function (err, emps) {

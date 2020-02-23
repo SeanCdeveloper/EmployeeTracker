@@ -1,8 +1,5 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-// const { getAllDepartmentNames } = require('./department');
-// const { getDepartmentID } = require('./dataStore');
-// const { getAllRoles } = require('../dataStore');
 
 var connection = mysql.createConnection({
     host: "localhost",
