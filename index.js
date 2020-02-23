@@ -153,7 +153,6 @@ function deleteDepartment() {
 }
 
 function viewEmployees() {
-    //console.log("View all Employees");
     connection.query("SELECT * FROM EmployeeTrackerDB.employee", function (err, res) {
         if (err) throw err;
         for (let i = 0; i < res.length; i++) {
@@ -175,7 +174,6 @@ function viewEmployees() {
 function viewAllEmployeesByDepartment() {
     connection.query("SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);", function (err, res) {
         if (err) throw err;
-        //  employeeByDepartment= [];
         for (let i = 0; i < res.length; i++) {
             console.log(res[i].first_name + " " + res[i].last_name + " | Department: " + res[i].name);
         }
@@ -198,7 +196,6 @@ function viewAllEmployeesByDepartment() {
     }
 
     function updateEmployeeManager() {
-        console.log("hello")
         connection.query("SELECT * FROM employee WHERE manager_id IS NOT NULL", function (err, emps) {
             if (err) throw err;
             connection.query("SELECT * FROM employee WHERE manager_id IS NULL", function(err, mngrs) {
@@ -225,7 +222,6 @@ function viewAllEmployeesByDepartment() {
                     connection.query(query, [manager[0], manager[1]], function (err, res) {
                         if (err) throw err;
                         let newManagerId = res[0].id;
-                       // console.log(newManagerId);
                         let query2 = "UPDATE employee SET manager_id=? WHERE employee.first_name=? AND employee.last_name=?";
                     connection.query(query2, [newManagerId, changedEmp[0], changedEmp[1]], function (err, res) {
                         if (err) throw err;
@@ -435,7 +431,6 @@ function updateEmployeeRole() {
                         let query = ("UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?");
                         connection.query(query, [newEmpRoleId, searchEmployee[0], searchEmployee[1]], function (err, res) {
                             if (err) throw err;
-                            //console.log(res);
                         });
                         runSearch();
                     });
